@@ -53,4 +53,4 @@ if os.path.exists(output_file):
 with open(output_file, "w", encoding="utf-8") as f:
     json.dump(ontology, f, ensure_ascii=False, indent=4)
 
-print(f"Онтологія успішно створена та збережена у файл {output_file}")
+print(f"Онтологія успішно створена та збережена в {output_file}")
