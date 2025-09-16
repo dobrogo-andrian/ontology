@@ -41,7 +41,7 @@ def generate_ontology_from_folder(folder_path):
     return ontology
 
 
-folder_path = "ExtructedFrames extended"
+folder_path = "../ExtructedFrames extended"
 
 
 ontology = generate_ontology_from_folder(folder_path)
