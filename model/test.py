@@ -1,19 +1,28 @@
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
-from tensorflow.keras.models import load_model
 import numpy as np
+from sklearn.metrics import classification_report
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import CONSTANTS as CONST
-
+from sklearn.metrics import classification_report
 
 model = load_model(r"../model/classification_model.keras")
 
-image_path = r"C:\Games\site\prectic\ExtructedFrames extended\BMP\20240920233644\frame_00001.jpg"
-image = load_img(image_path, target_size=CONST.IMG_SIZE)
-image_array = img_to_array(image) / 255.0
-image_array = np.expand_dims(image_array, axis=0)
+data_dir = r"C:\Games\site\prectic\ExtructedFrames extended"
+val_datagen = ImageDataGenerator(rescale=1.0/255)
+validation_generator = val_datagen.flow_from_directory(
+    data_dir,
+    target_size=CONST.IMG_SIZE,
+    batch_size=CONST.BATCH_SIZE,
+    class_mode='categorical',
+    shuffle=False,
+    subset=None
+)
 
-predictions = model.predict(image_array)
-predicted_class = np.argmax(predictions)
+predictions = model.predict(validation_generator)
+y_pred = np.argmax(predictions, axis=1)
+y_true = validation_generator.classes
 
-class_labels = ['BMP', 'Bradley', 'Tank', 'unknown']
+class_labels = list(validation_generator.class_indices.keys())
 
-print(f"Прогнозована категорія: {class_labels[predicted_class]}")
+
+print(classification_report(y_true, y_pred, target_names=class_labels))
